@@ -1,22 +1,21 @@
 % Configuration
-% load("P_520_100.mat","P_520_100")
-% load("Q_15000_P_520.mat","Q")
+load("P_520.mat","P_520")
 % % Q = Q ./ max(abs(Q(:)));
-% P = P_520_100;
-% BlockSize = 10;
+P = P_520;
+BlockSize = 10;
 % epsilon_test = 0.05;
-% pcmatrix = ldpcQuasiCyclicMatrix(BlockSize,P);
+pcmatrix = ldpcQuasiCyclicMatrix(BlockSize,P);
 % Q = readmatrix('qtable_ep015000.csv');
 % Q = Q(2:end, :);
 % pcmatrix = sparse(logical(readmatrix('WRAN_irreg_384_256 (1).csv')));
 %% 
-load('wran_384_256.mat','wran_384_256');
-BlockSize = 16;
-H = sparse(logical(wran_384_256));
-pcmatrix = H;
-blocksize_wran = 16;
-load("Q_wran_snr_0.mat","Q")
-Q1{1} = Q;
+% load('wran_384_256.mat','wran_384_256');
+% BlockSize = 16;
+% H = sparse(logical(wran_384_256));
+% pcmatrix = H;
+% blocksize_wran = 16;
+% load("Q_wran_snr_0.mat","Q")
+% Q1{1} = Q;
 % load("Q_wran_snr_0.5.mat","Q")
 % Q1{2} = Q;
 % load("Q_wran_snr_1.mat","Q")
@@ -29,13 +28,15 @@ Q1{1} = Q;
 % Q1{6} = Q;
 % load("Q_wran_snr_3.mat","Q")
 % Q1{7} = Q;
+load("Q_P_520_snr_0.mat","Q")
+Q1{1} = Q;
 [m, ~] = size(pcmatrix);
 % P = zeros(m/BlockSize);
 CN_neighbors = cell(m,1);
 for c = 1:m
     CN_neighbors{c} = find(pcmatrix(c,:));
 end
-params.maxStateBits = 11;
+params.maxStateBits = 10;
 cfgLDPCEnc = ldpcEncoderConfig(pcmatrix);
 cfgLDPCDec_bp = ldpcDecoderConfig(pcmatrix);
 cfgLDPCDec = ldpcDecoderConfig(pcmatrix,'layered-bp');
@@ -89,7 +90,7 @@ for i =1 : 1
         pow2vec = 2.^(params.maxStateBits-1:-1:0);
 
         % --- sequential scheduling ---
-        for u = 1:8*maxnumiter   % number of clusters
+        for u = 1:42*maxnumiter   % number of clusters
 
             % ---------- STATE → INDEX ----------
             s_new = 1 + state_hard_updated * pow2vec';

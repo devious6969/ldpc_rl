@@ -2,12 +2,12 @@
 clear; clc;
 
 %% ---------------- PARITY CHECK MATRIX ----------------
-% load("P_520_100.mat","P_520_100")
-load('wran_384_256.mat','wran_384_256');
-% P = P_520_100;
-% blocksize = 10;
-H = sparse(logical(wran_384_256));
-% H = ldpcQuasiCyclicMatrix(blocksize,P);
+load("P_520.mat","P_520")
+% load('wran_384_256.mat','wran_384_256');
+P = P_520;
+blocksize = 10;
+% H = sparse(logical(wran_384_256));
+H = ldpcQuasiCyclicMatrix(blocksize,P);
 [m, ~] = size(H);
 
 %% ---------------- PARAMETERS ----------------
@@ -15,7 +15,7 @@ params.alpha = 0.1;
 params.beta = 0.9;
 params.epsilon = 0.1;
 params.lmax = 50;
-params.maxStateBits = 11;   % IMPORTANT   10 for P_520
+params.maxStateBits = 10;   % IMPORTANT   10 for P_520
 
 numSamples = 30000;
 n = length(H);
@@ -48,7 +48,7 @@ end
 %% ---------------- TRAIN ----------------
 Q = RELDEC_CPU_MAIN(L_set, H, CN_neighbors, VN_neighbors, clusters, params);
 
-save("Q_wran_snr_0.mat","Q")
+save("Q_P_520_snr_0.mat","Q")
 disp('Training completed');
 
 
