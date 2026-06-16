@@ -53,7 +53,7 @@ maxnumiter = 5;
 
 for i =1 : 1
     current_state = zeros(m,params.maxStateBits);
-    for j = 1 : 1000
+    for j = 1 : 10000
         bits = zeros(cfgLDPCEnc.NumInformationBits,1);
         codeword = ldpcEncode(bits,cfgLDPCEnc);
         codeword_1 = (codeword == 0);
