@@ -28,7 +28,7 @@ pcmatrix = ldpcQuasiCyclicMatrix(BlockSize,P);
 % Q1{6} = Q;
 % load("Q_wran_snr_3.mat","Q")
 % Q1{7} = Q;
-load("Q_P_520_snr_0.mat","Q")
+load("Q_P_520_snr_neg3.mat","Q")
 Q1{1} = Q;
 [m, ~] = size(pcmatrix);
 % P = zeros(m/BlockSize);
@@ -45,14 +45,15 @@ numEdges      = length(cfgLDPCDec.derivedParams.columnIndexMap)/2;
 blockLen      = cfgLDPCDec.BlockLength;
 parityLen     = cfgLDPCDec.NumParityCheckBits;
 nRowsPerLayer = cfgLDPCDec.NumRowsPerLayer;
-SNR_db = [0 0.5 1 1.5 2 2.5 3];
+% SNR_db = [0 0.5 1 1.5 2 2.5 3];
+SNR_db = [-3 -2 -1 0 1];
 % SNR
 SNR = 10.^(SNR_db/10);
 maxnumiter = 5;
 
 for i =1 : 1
     current_state = zeros(m,params.maxStateBits);
-    for j = 1 : 10000
+    for j = 1 : 1000
         bits = zeros(cfgLDPCEnc.NumInformationBits,1);
         codeword = ldpcEncode(bits,cfgLDPCEnc);
         codeword_1 = (codeword == 0);
@@ -140,7 +141,7 @@ for i =1 : 1
             end
 
             state_hard_updated = current_state < 0;
-            if mod(u,8) == 0
+            if mod(u,42) == 0
                 used = false(1, height(pcmatrix)/BlockSize);
             end
         end

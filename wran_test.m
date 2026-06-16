@@ -1,12 +1,12 @@
-% load('wran_384_256.mat','wran_384_256');
-load("P_520.mat","P_520")
-P = P_520;
-% H = sparse(logical(wran_384_256));
-H = ldpcQuasiCyclicMatrix(10,P);
+load('wran_384_256.mat','wran_384_256');
+% load("P_520.mat","P_520")
+% P = P_520;
+H = sparse(logical(wran_384_256));
+% H = ldpcQuasiCyclicMatrix(10,P);
 cfgLDPCEnc = ldpcEncoderConfig(H);
 cfgLDPCDec_l = ldpcDecoderConfig(H, "layered-bp");
 cfgLDPCDec = ldpcDecoderConfig(H);
-SNR_db = [-3 -2 -1 0 1];
+SNR_db = [0 1 2 3 4];
 SNR = 10.^(SNR_db/10);
 
 for i =1 : length(SNR)

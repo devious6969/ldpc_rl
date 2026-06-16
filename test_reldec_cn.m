@@ -59,7 +59,7 @@ SNR = 10.^(SNR_db/10);
 maxnumiter = 5;
 for i =1 : 1
     current_state = zeros(m,10);
-    for j = 1 : 20000
+    parfor j = 1 : 20000
         bits = zeros(cfgLDPCEnc.NumInformationBits,1);
         codeword = ldpcEncode(bits,cfgLDPCEnc);
         codeword_1 = (codeword == 0);
@@ -83,8 +83,8 @@ for i =1 : 1
             vals = Y_temp(idx1);
             vals = vals(:)';
 
-            k = min(length(vals), params.maxStateBits);
-            current_state(v,1:k) = vals(1:k);
+            w = min(length(vals), params.maxStateBits);
+            current_state(v,1:w) = vals(1:w);
         end
 
         % --- hard decision ---
@@ -136,8 +136,8 @@ for i =1 : 1
                 vals = Y_temp(idx1);
                 vals = vals(:)';
 
-                k = min(length(vals), params.maxStateBits);
-                current_state(v,1:k) = vals(1:k);
+                w = min(length(vals), params.maxStateBits);
+                current_state(v,1:w) = vals(1:w);
             end
 
             state_hard_updated = current_state < 0;

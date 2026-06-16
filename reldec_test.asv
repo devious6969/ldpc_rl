@@ -38,7 +38,7 @@ clusters = num2cell(1:m);
 L_set = cell(numSamples,1);
 
 % snr = [1	1.12201845430196	1.25892541179417	1.41253754462275	1.58489319246111	1.77827941003892	1.99526231496888];
-snr = [0.501187233627272	0.630957344480193	0.794328234724282	1	1.25892541179417];
+
 sigma = 1;
 
 for i = 1:numSamples
@@ -49,7 +49,7 @@ end
 %% ---------------- TRAIN ----------------
 Q = RELDEC_CPU_MAIN(L_set, H, CN_neighbors, VN_neighbors, clusters, params);
 
-save("Q_P_520_snr_neg3.mat","Q")
+save("Q_P_520_snr_0.mat","Q")
 disp('Training completed');
 
 
