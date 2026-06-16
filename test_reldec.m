@@ -30,6 +30,15 @@ pcmatrix = ldpcQuasiCyclicMatrix(BlockSize,P);
 % Q1{7} = Q;
 load("Q_P_520_snr_neg3.mat","Q")
 Q1{1} = Q;
+load("Q_P_520_snr_neg2.mat","Q")
+Q1{2} = Q;
+load("Q_P_520_snr_neg1.mat","Q")
+Q1{3} = Q;
+load("Q_P_520_snr_0.mat","Q")
+Q1{4} = Q;
+load("Q_P_520_snr_1.mat","Q")
+Q1{5} = Q;
+
 [m, ~] = size(pcmatrix);
 % P = zeros(m/BlockSize);
 CN_neighbors = cell(m,1);
@@ -51,7 +60,7 @@ SNR_db = [-3 -2 -1 0 1];
 SNR = 10.^(SNR_db/10);
 maxnumiter = 5;
 
-for i =1 : 1
+for i =2 : 2
     current_state = zeros(m,params.maxStateBits);
     for j = 1 : 10000
         bits = zeros(cfgLDPCEnc.NumInformationBits,1);
