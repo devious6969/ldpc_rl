@@ -60,9 +60,9 @@ SNR_db = [-3 -2 -1 0 1];
 SNR = 10.^(SNR_db/10);
 maxnumiter = 5;
 
-for i =2 : 2
+for i = 1 : 5
     current_state = zeros(m,params.maxStateBits);
-    for j = 1 : 10000
+    parfor j = 1 : 10000
         bits = zeros(cfgLDPCEnc.NumInformationBits,1);
         codeword = ldpcEncode(bits,cfgLDPCEnc);
         codeword_1 = (codeword == 0);
@@ -74,9 +74,9 @@ for i =2 : 2
         [Y,actualnumiter,finalparitychecks] = ldpcDecode(soft_demodulated_output,cfgLDPCDec,maxnumiter);
         Res = repmat({zeros(cfgLDPCEnc.BlockLength,1)}, 1, height(pcmatrix)/BlockSize);
         Y_temp = soft_demodulated_output;
-        for k = 1 : m
-            res{k} = zeros(1,numel(CN_neighbors{k}));
-        end
+        % for k = 1 : m
+        %     res{k} = zeros(1,numel(CN_neighbors{k}));
+        % end
 
         % --- initialize state ---
         current_state = zeros(m, params.maxStateBits);
@@ -86,8 +86,8 @@ for i =2 : 2
             vals = Y_temp(idx1);
             vals = vals(:)';
 
-            k = min(length(vals), params.maxStateBits);
-            current_state(v,1:k) = vals(1:k);
+            w = min(length(vals), params.maxStateBits);
+            current_state(v,1:w) = vals(1:w);
         end
 
         % --- hard decision ---
@@ -125,7 +125,6 @@ for i =2 : 2
 
             % ---------- SELECT BEST CLUSTER ----------
             [~, best_cluster] = max(temp);
-            a(u) = best_cluster;
             % mark cluster as used
             used(best_cluster) = true;
 
@@ -145,8 +144,8 @@ for i =2 : 2
                 vals = Y_temp(idx1);
                 vals = vals(:)';
 
-                k = min(length(vals), params.maxStateBits);
-                current_state(v,1:k) = vals(1:k);
+                w = min(length(vals), params.maxStateBits);
+                current_state(v,1:w) = vals(1:w);
             end
 
             state_hard_updated = current_state < 0;
