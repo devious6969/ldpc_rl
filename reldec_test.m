@@ -42,14 +42,15 @@ snr = [0.501187233627272	0.630957344480193	0.794328234724282	1	1.25892541179417]
 sigma = 1;
 
 for i = 1:numSamples
-    rx = 1*sqrt(snr(3)) + sigma * randn(1,n);
+    rx = 1*sqrt(snr(5)) + sigma * randn(1,n);
     L_set{i} = 2*rx/(sigma^2);
 end
 
 %% ---------------- TRAIN ----------------
 Q = RELDEC_CPU_MAIN(L_set, H, CN_neighbors, VN_neighbors, clusters, params);
 
-save("Q_P_520_snr_neg1.mat","Q")
+
+save("Q_P_520_snr_1.mat","Q")
 disp('Training completed');
 
 
