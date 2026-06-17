@@ -1,21 +1,21 @@
 % Configuration
-load("P_520.mat","P_520")
+% load("P_520.mat","P_520")
 % % Q = Q ./ max(abs(Q(:)));
-P = P_520;
-BlockSize = 10;
-% epsilon_test = 0.05;
-pcmatrix = ldpcQuasiCyclicMatrix(BlockSize,P);
+% P = P_520;
+% BlockSize = 10;
+% % epsilon_test = 0.05;
+% pcmatrix = ldpcQuasiCyclicMatrix(BlockSize,P);
 % Q = readmatrix('qtable_ep015000.csv');
 % Q = Q(2:end, :);
 % pcmatrix = sparse(logical(readmatrix('WRAN_irreg_384_256 (1).csv')));
 %% 
-% load('wran_384_256.mat','wran_384_256');
-% BlockSize = 16;
-% H = sparse(logical(wran_384_256));
-% pcmatrix = H;
-% blocksize_wran = 16;
-% load("Q_wran_snr_0.mat","Q")
-% Q1{1} = Q;
+load('wran_384_256.mat','wran_384_256');
+BlockSize = 16;
+H = sparse(logical(wran_384_256));
+pcmatrix = H;
+blocksize_wran = 16;
+load("Q_wran_snr_0.mat","Q")
+Q1{1} = Q;
 % load("Q_wran_snr_0.5.mat","Q")
 % Q1{2} = Q;
 % load("Q_wran_snr_1.mat","Q")
@@ -28,16 +28,16 @@ pcmatrix = ldpcQuasiCyclicMatrix(BlockSize,P);
 % Q1{6} = Q;
 % load("Q_wran_snr_3.mat","Q")
 % Q1{7} = Q;
-load("Q_P_520_snr_neg3.mat","Q")
-Q1{1} = Q;
-load("Q_P_520_snr_neg2.mat","Q")
-Q1{2} = Q;
-load("Q_P_520_snr_neg1.mat","Q")
-Q1{3} = Q;
-load("Q_P_520_snr_0.mat","Q")
-Q1{4} = Q;
-load("Q_P_520_snr_1.mat","Q")
-Q1{5} = Q;
+% load("Q_P_520_snr_neg3.mat","Q")
+% Q1{1} = Q;
+% load("Q_P_520_snr_neg2.mat","Q")
+% Q1{2} = Q;
+% load("Q_P_520_snr_neg1.mat","Q")
+% Q1{3} = Q;
+% load("Q_P_520_snr_0.mat","Q")
+% Q1{4} = Q;
+% load("Q_P_520_snr_1.mat","Q")
+% Q1{5} = Q;
 
 [m, ~] = size(pcmatrix);
 % P = zeros(m/BlockSize);
@@ -45,7 +45,7 @@ CN_neighbors = cell(m,1);
 for c = 1:m
     CN_neighbors{c} = find(pcmatrix(c,:));
 end
-params.maxStateBits = 10;
+params.maxStateBits = 11;  % 10 for P_520 and % 11 for WRAN
 cfgLDPCEnc = ldpcEncoderConfig(pcmatrix);
 cfgLDPCDec_bp = ldpcDecoderConfig(pcmatrix);
 cfgLDPCDec = ldpcDecoderConfig(pcmatrix,'layered-bp');
@@ -54,13 +54,13 @@ numEdges      = length(cfgLDPCDec.derivedParams.columnIndexMap)/2;
 blockLen      = cfgLDPCDec.BlockLength;
 parityLen     = cfgLDPCDec.NumParityCheckBits;
 nRowsPerLayer = cfgLDPCDec.NumRowsPerLayer;
-% SNR_db = [0 0.5 1 1.5 2 2.5 3];
-SNR_db = [-3 -2 -1 0 1];
+SNR_db = [0 1 2 3 4];
+% SNR_db = [-3 -2 -1 0 1];
 % SNR
 SNR = 10.^(SNR_db/10);
 maxnumiter = 5;
 
-for i = 1 : 5
+for i = 1 : 1
     current_state = zeros(m,params.maxStateBits);
     parfor j = 1 : 10000
         bits = zeros(cfgLDPCEnc.NumInformationBits,1);
@@ -100,7 +100,7 @@ for i = 1 : 5
         pow2vec = 2.^(params.maxStateBits-1:-1:0);
 
         % --- sequential scheduling ---
-        for u = 1:42*maxnumiter   % number of clusters
+        for u = 1:height(pcmatrix)/BlockSize*maxnumiter   % number of clusters
 
             % ---------- STATE → INDEX ----------
             s_new = 1 + state_hard_updated * pow2vec';
@@ -149,7 +149,7 @@ for i = 1 : 5
             end
 
             state_hard_updated = current_state < 0;
-            if mod(u,42) == 0
+            if mod(u,height(pcmatrix)/BlockSize) == 0
                 used = false(1, height(pcmatrix)/BlockSize);
             end
         end

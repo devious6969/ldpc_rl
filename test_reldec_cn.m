@@ -59,7 +59,7 @@ SNR = 10.^(SNR_db/10);
 maxnumiter = 5;
 for i =1 : 1
     current_state = zeros(m,10);
-    parfor j = 1 : 20000
+    for j = 1 : 20000
         bits = zeros(cfgLDPCEnc.NumInformationBits,1);
         codeword = ldpcEncode(bits,cfgLDPCEnc);
         codeword_1 = (codeword == 0);

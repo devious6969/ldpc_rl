@@ -2,12 +2,13 @@
 clear; clc;
 
 %% ---------------- PARITY CHECK MATRIX ----------------
-load("P_520.mat","P_520")
-% load('wran_384_256.mat','wran_384_256');
-P = P_520;
-blocksize = 10;
-% H = sparse(logical(wran_384_256));
-H = ldpcQuasiCyclicMatrix(blocksize,P);
+% load("P_520.mat","P_520")
+load('wran_384_256.mat','wran_384_256');
+% P = P_520;
+% blocksize = 10;
+blocksize = 16;
+H = sparse(logical(wran_384_256));
+% H = ldpcQuasiCyclicMatrix(blocksize,P);
 [m, ~] = size(H);
 
 %% ---------------- PARAMETERS ----------------
@@ -15,7 +16,7 @@ params.alpha = 0.1;
 params.beta = 0.9;
 params.epsilon = 0.1;
 params.lmax = 50;
-params.maxStateBits = 10;   % IMPORTANT   10 for P_520
+params.maxStateBits = 11;   % IMPORTANT   10 for P_520 and 11 for WRAN
 
 numSamples = 30000;
 n = length(H);
@@ -37,12 +38,12 @@ clusters = num2cell(1:m);
 %% ---------------- GENERATE TRAINING DATA ----------------
 L_set = cell(numSamples,1);
 
-% snr = [1	1.12201845430196	1.25892541179417	1.41253754462275	1.58489319246111	1.77827941003892	1.99526231496888];
-snr = [0.501187233627272	0.630957344480193	0.794328234724282	1	1.25892541179417];
+snr = [1	1.25892541179417	1.58489319246111	1.99526231496888	2.51188643150958];
+% snr = [0.501187233627272	0.630957344480193	0.794328234724282	1	1.25892541179417];
 sigma = 1;
 
 for i = 1:numSamples
-    rx = 1*sqrt(snr(5)) + sigma * randn(1,n);
+    rx = 1*sqrt(snr(4)) + sigma * randn(1,n);
     L_set{i} = 2*rx/(sigma^2);
 end
 
@@ -50,7 +51,7 @@ end
 Q = RELDEC_CPU_MAIN(L_set, H, CN_neighbors, VN_neighbors, clusters, params);
 
 
-save("Q_P_520_snr_1.mat","Q")
+save("Q_wran_snr_3.mat","Q")
 disp('Training completed');
 
 
