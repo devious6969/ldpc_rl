@@ -1,18 +1,17 @@
 % Configuration
 % load("P_520.mat","P_520")
 % % Q = Q ./ max(abs(Q(:)));
-<<<<<<< HEAD
-P = P_520;
-blocksize = 10;
-% epsilon_test = 0.05;
-pcmatrix = ldpcQuasiCyclicMatrix(blocksize,P);
-BlockSize = 5;
-=======
+
+% P = P_520;
+% blocksize = 10;
+% % epsilon_test = 0.05;
+% pcmatrix = ldpcQuasiCyclicMatrix(blocksize,P);
+% BlockSize = 5;
+
 % P = P_520;
 % BlockSize = 10;
 % % epsilon_test = 0.05;
 % pcmatrix = ldpcQuasiCyclicMatrix(BlockSize,P);
->>>>>>> 8f50a8d2c78f97a63d175c5d55badb6a8ded612b
 % Q = readmatrix('qtable_ep015000.csv');
 % Q = Q(2:end, :);
 % pcmatrix = sparse(logical(readmatrix('WRAN_irreg_384_256 (1).csv')));
@@ -109,11 +108,8 @@ for i = 1 : 1
         pow2vec = 2.^(params.maxStateBits-1:-1:0);
 
         % --- sequential scheduling ---
-<<<<<<< HEAD
+
         for u = 1:(height(pcmatrix)/BlockSize)*maxnumiter   % number of clusters
-=======
-        for u = 1:height(pcmatrix)/BlockSize*maxnumiter   % number of clusters
->>>>>>> 8f50a8d2c78f97a63d175c5d55badb6a8ded612b
 
             % ---------- STATE → INDEX ----------
             s_new = 1 + state_hard_updated * pow2vec';
