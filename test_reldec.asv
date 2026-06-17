@@ -2,10 +2,9 @@
 load("P_520.mat","P_520")
 % % Q = Q ./ max(abs(Q(:)));
 P = P_520;
-blocksize = 10;
+BlockSize = 10;
 % epsilon_test = 0.05;
-pcmatrix = ldpcQuasiCyclicMatrix(blocksize,P);
-BlockSize = 5;
+pcmatrix = ldpcQuasiCyclicMatrix(BlockSize,P);
 % Q = readmatrix('qtable_ep015000.csv');
 % Q = Q(2:end, :);
 % pcmatrix = sparse(logical(readmatrix('WRAN_irreg_384_256 (1).csv')));
@@ -63,7 +62,6 @@ maxnumiter = 5;
 
 for i = 1 : 5
     current_state = zeros(m,params.maxStateBits);
-    i
     parfor j = 1 : 10000
         bits = zeros(cfgLDPCEnc.NumInformationBits,1);
         codeword = ldpcEncode(bits,cfgLDPCEnc);
@@ -102,7 +100,7 @@ for i = 1 : 5
         pow2vec = 2.^(params.maxStateBits-1:-1:0);
 
         % --- sequential scheduling ---
-        for u = 1:(height(pcmatrix)/BlockSize)*maxnumiter   % number of clusters
+        for u = 1:42*maxnumiter   % number of clusters
 
             % ---------- STATE → INDEX ----------
             s_new = 1 + state_hard_updated * pow2vec';
@@ -151,7 +149,7 @@ for i = 1 : 5
             end
 
             state_hard_updated = current_state < 0;
-            if mod(u,height(pcmatrix)/BlockSize) == 0
+            if mod(u,42) == 0
                 used = false(1, height(pcmatrix)/BlockSize);
             end
         end
