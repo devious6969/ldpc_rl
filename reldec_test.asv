@@ -50,7 +50,7 @@ snr = [1.122018454301963	1.258925411794167	1.412537544622754	1.584893192461114	1
 sigma = 1;
 
 for i = 1:numSamples
-    rx = 1*sqrt(snr(6)) + sigma * randn(1,n);
+    rx = 1*sqrt(snr(1)) + sigma * randn(1,n);
     L_set{i} = 2*rx/(sigma^2);
 end
 
@@ -58,7 +58,7 @@ end
 Q = RELDEC_CPU_MAIN(L_set, H, CN_neighbors, VN_neighbors, clusters, params);
 
 
-save("Q_mackey_3.mat","Q")
+save("Q_wran_snr_4.mat","Q")
 disp('Training completed');
 
 
