@@ -105,7 +105,7 @@ for i = 1 : 6
             % ensure row vector
             vals = vals(:)';
 
-            current_state(v) = mean(tanh((vals)));
+            current_state(v) = mean(tanh(abs(vals)));
 
             % Initilization of states for Episode
             s(v) = min(max(floor((current_state(i) + 1)/2 * 32) + 1, 1), 32);
@@ -163,7 +163,7 @@ for i = 1 : 6
                 % ensure row vector
                 vals = vals(:)';
 
-                current_state(v) = mean(tanh((vals)));
+                current_state(v) = mean(tanh(abs(vals)));
 
                 % Initilization of states for Episode
                 s(v) = min(max(floor((current_state(i) + 1)/2 * 32) + 1, 1), 32);

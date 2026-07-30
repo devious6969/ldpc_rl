@@ -23,7 +23,7 @@ params.lmax = 50;
 params.maxlevels = 32;   % Quantization Level 32 -> 5 bits
 
 
-numSamples = 100000;
+numSamples = 30000;
 n = length(H);
 %% ---------------- PRECOMPUTE GRAPH ----------------
 CN_neighbors = cell(m,1);
@@ -92,7 +92,7 @@ for idx = 1:N
         % ensure row vector
         vals = vals(:)';
 
-        current_state(i) = mean(tanh(abs(vals))); 
+        current_state(i) = mean(tanh((vals))); 
 
         % Initilization of states for Episode
         s(i) = min(max(floor((current_state(i) + 1)/2 * 32) + 1, 1), 32);
@@ -144,7 +144,7 @@ for idx = 1:N
             % ensure row vector
             vals = vals(:)';
             
-            current_state_updated(i) = mean(tanh(abs(vals)));
+            current_state_updated(i) = mean(tanh((vals)));
 
             % Initilization of states for Episode
             s_new(i) = min(max(floor((current_state_updated(i) + 1)/2 * 32) + 1, 1), 32);
