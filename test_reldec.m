@@ -84,7 +84,7 @@ maxnumiter = 5;
 for i = 6
     current_state = zeros(m,params.maxStateBits);
     i
-    parfor j = 1 : 50000
+    parfor j = 1 : 100000
         % bits = zeros(cfgLDPCEnc.NumInformationBits,1);
         % codeword = ldpcEncode(bits,cfgLDPCEnc);
         bits = zeros(48,1);
