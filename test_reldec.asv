@@ -148,7 +148,7 @@ for i = 1 : length(SNR)
             % ---------- Q LOOKUP ----------
             vals1 = zeros(1, m);
             for f = 1:m
-                vals1(f) = Q1{3}(s_new(f), f);
+                vals1(f) = Q1{i}(s_new(f), f);
             end
 
             % ---------- CLUSTER AGGREGATION ----------
@@ -176,15 +176,16 @@ for i = 1 : length(SNR)
             % Y_temp = Y_out;
             % Res{best_cluster} = res1;
             % % ---------- BP UPDATE ----------  for check node only
-            Y_out = Y_temp;
-            idx2 = CN_neighbors{best_cluster};
-            vals2 = Y_temp(idx2) - Res{best_cluster}(idx2);
-            temp = tanh(vals2/2);
-            prodLq = prod(temp);
-            Res_new = 2*atanh(prodLq ./ temp);
-            Y_out(idx2) = vals2 + Res_new;
-            Res{best_cluster}(idx2) = Res_new;
-            Y_temp = Y_out;
+                Res_int = zeros(length(Y_temp),1);
+                % Y_out = Y_temp;
+                idx2 = CN_neighbors{best_cluster};
+                vals2 = Y_temp(idx2)- Res{best_cluster}';
+                temp = tanh(vals2./2);
+                prodLq = prod(temp);
+                Res_int(idx2) = 2*atanh(prodLq ./ temp)';
+                Y_out(idx2) = vals2 + Res_int(idx2);
+                Res{best_cluster} = Res_int;
+                Y_temp = Y_out;
 
             % ---------- UPDATE STATE AFTER ACTION ----------
             current_state = zeros(m, params.maxStateBits);
@@ -209,7 +210,6 @@ for i = 1 : length(SNR)
         ber(j) = biterr(output_final,bits);
         % ber1(j) = biterr(Y,bits);
         j
-        i
     end
     ber_t(i) = mean(ber)/cfgLDPCEnc.NumInformationBits;
     % ber_t(i) = mean(ber)/48;

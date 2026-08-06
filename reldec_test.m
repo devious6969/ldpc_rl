@@ -3,15 +3,15 @@ clear; clc;
 
 %% ---------------- PARITY CHECK MATRIX ----------------
 % load("P_520.mat","P_520")
-% load('wran_384_256.mat','wran_384_256');
-load('p_mackey.mat','p_mackey');
+load('wran_384_256.mat','wran_384_256');
+% load('p_mackey.mat','p_mackey');
 % P = P_520;
-% blocksize = 10;
+blocksize = 10;
 % blocksize = 16;
-% H = sparse(logical(wran_384_256));
+H = sparse(logical(wran_384_256));
 % H = ldpcQuasiCyclicMatrix(blocksize,P);
-H = sparse(logical(p_mackey));
-blocksize = 1 ;
+% H = sparse(logical(p_mackey));
+% blocksize = 1 ;
 [m, ~] = size(H);
 
 %% ---------------- PARAMETERS ----------------
@@ -20,7 +20,7 @@ params.beta = 0.9;
 params.epsilon = 0.1;
 params.lmax = 50;
 
-params.maxStateBits = 6;   % IMPORTANT   10 for P_520 and 11 for WRAN 6 for mackey
+params.maxStateBits = 11;   % IMPORTANT   10 for P_520 and 11 for WRAN 6 for mackey
 
 
 numSamples = 30000;
@@ -44,10 +44,10 @@ clusters = num2cell(1:m);
 L_set = cell(numSamples,1);
 
 
-% snr = [1	1.25892541179417	1.58489319246111	1.99526231496888	2.51188643150958];
+snr = [1	1.25892541179417	1.58489319246111	1.99526231496888	2.51188643150958 2.51188643150958	3.16227766016838	3.98107170553497];
 % snr = [0.501187233627272	0.630957344480193	0.794328234724282	1	1.25892541179417];
 snr = [1.122018454301963	1.258925411794167	1.412537544622754	1.584893192461114	1.778279410038923	1.995262314968880];
-sigma = 1;
+% sigma = 1;
 
 for i = 1:numSamples
     rx = 1*sqrt(snr(6)) + sigma * randn(1,n);
