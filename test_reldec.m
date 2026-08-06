@@ -21,7 +21,7 @@ load('wran_384_256.mat','wran_384_256');
 H = sparse(logical(wran_384_256));
 % load('p_mackey.mat','p_mackey');
 % H = sparse(logical(p_mackey));
-BlockSize = 1 ;
+BlockSize = 4 ;
 pcmatrix = H;
 blocksize_wran = 16;
 load("Q_wran_snr_0.mat","Q")
@@ -169,22 +169,22 @@ for i = 1 : length(SNR)
             used(best_cluster) = true;
 
             % ---------- BP UPDATE ----------
-            % [Y_out, res1] = ldpc_cluster(...
-            %     Y_temp, CN_neighbors, best_cluster, ...
-            %     Res{best_cluster}, BlockSize);
-            % 
-            % Y_temp = Y_out;
-            % Res{best_cluster} = res1;
-            % % ---------- BP UPDATE ----------  for check node only
-            Y_out = Y_temp;
-            idx2 = CN_neighbors{best_cluster};
-            vals2 = Y_temp(idx2) - Res{best_cluster}(idx2);
-            temp = tanh(vals2/2);
-            prodLq = prod(temp);
-            Res_new = 2*atanh(prodLq ./ temp);
-            Y_out(idx2) = vals2 + Res_new;
-            Res{best_cluster}(idx2) = Res_new;
+            [Y_out, res1] = ldpc_cluster(...
+                Y_temp, CN_neighbors, best_cluster, ...
+                Res{best_cluster}, BlockSize);
+
             Y_temp = Y_out;
+            Res{best_cluster} = res1;
+            % % ---------- BP UPDATE ----------  for check node only
+            % Y_out = Y_temp;
+            % idx2 = CN_neighbors{best_cluster};
+            % vals2 = Y_temp(idx2) - Res{best_cluster}(idx2);
+            % temp = tanh(vals2/2);
+            % prodLq = prod(temp);
+            % Res_new = 2*atanh(prodLq ./ temp);
+            % Y_out(idx2) = vals2 + Res_new;
+            % Res{best_cluster}(idx2) = Res_new;
+            % Y_temp = Y_out;
 
             % ---------- UPDATE STATE AFTER ACTION ----------
             current_state = zeros(m, params.maxStateBits);
