@@ -44,9 +44,9 @@ clusters = num2cell(1:m);
 L_set = cell(numSamples,1);
 
 
-snr = [1	1.25892541179417	1.58489319246111	1.99526231496888	2.51188643150958 2.51188643150958	3.16227766016838	3.98107170553497];
+snr = [1	1.25892541179417	1.58489319246111	1.99526231496888	2.51188643150958 	3.16227766016838	3.98107170553497];
 % snr = [0.501187233627272	0.630957344480193	0.794328234724282	1	1.25892541179417];
-snr = [1.122018454301963	1.258925411794167	1.412537544622754	1.584893192461114	1.778279410038923	1.995262314968880];
+% snr = [1.122018454301963	1.258925411794167	1.412537544622754	1.584893192461114	1.778279410038923	1.995262314968880];
 % sigma = 1;
 
 for i = 1:numSamples
@@ -155,7 +155,8 @@ for idx = 1:N
         % new_correct_bits = sum(state_hard_updated(a,:));
         % 
         % reward = prev_correct_bits - new_correct_bits;
-        reward = nnz(state_hard_updated(a,:) == 0)/(length(CN_neighbors{a}));
+        % reward = sum((state_hard_updated(a,:) == 0))/(length(CN_neighbors{a}));
+        reward = sum((state_hard_updated(a,:) == 0).*L(idx2))/(length(CN_neighbors{a}));
         % bin2dec for Q indexing fr updated state
         s_new = 1 + state_hard_updated*pow2vec';
         % Possible Actions in the current state

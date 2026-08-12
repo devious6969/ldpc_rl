@@ -52,7 +52,7 @@ snr = [1	1.25892541179417	1.58489319246111	1.99526231496888	2.51188643150958 	3.
 % sigma = 1;
 R = cfgLDPCEnc.NumInformationBits / cfgLDPCEnc.BlockLength;
 % R = 1/2 % for mackey
-sigma = sqrt(1/(2*R*snr(7)));
+sigma = sqrt(1/(2*R*snr(1)));
 for i = 1:numSamples
     rx = 1 +  sigma*randn(1,n);
     L_set{i} = 2*rx/(sigma^2);
@@ -62,7 +62,7 @@ end
 Q = RELDEC_CPU_MAIN(L_set, H, CN_neighbors, VN_neighbors, clusters, params);
 
 
-save("Q_wran_residue_reward_6.mat","Q")
+save("Q_wran_crt_llr_0.mat","Q")
 disp('Training completed');
 
 
@@ -162,7 +162,11 @@ for idx = 1:N
         % 
         % reward = prev_correct_bits - new_correct_bits;
         % reward = nnz(state_hard_updated(a,:) == 0)/(length(CN_neighbors{a}));
-        reward = sum(abs(res{a}-res_prev));
+        % reward = sum(abs(res{a}-res_prev));
+        temp_llr = zeros(1,11);
+        k2 = length(L(idx2));
+        temp_llr(1:k2) = L(idx2);
+        reward = sum((state_hard_updated(a,:) == 0).*temp_llr)/(length(CN_neighbors{a}));
         % bin2dec for Q indexing fr updated state
         s_new = 1 + state_hard_updated*pow2vec';
         % Possible Actions in the current state

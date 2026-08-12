@@ -151,7 +151,7 @@ for idx = 1:N
         % new_correct_bits = sum(state_hard_updated(a,:));
         % 
         % reward = prev_correct_bits - new_correct_bits;
-        reward = sum(state_hard_updated(a,:))/(length(CN_neighbors{a}));
+        reward = nnz(state_hard_updated(a,:) == 0)/(length(CN_neighbors{a}));
         % bin2dec for Q indexing fr updated state
         for i = 1 : m
             vec = state_hard_updated(i,:);
