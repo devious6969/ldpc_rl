@@ -156,7 +156,7 @@ for idx = 1:N
         % 
         % reward = prev_correct_bits - new_correct_bits;
         % reward = sum((state_hard_updated(a,:) == 0))/(length(CN_neighbors{a}));
-        reward = sum((state_hard_updated(a,:) == 0).*L(idx2))/(length(CN_neighbors{a}));
+        reward = (nnz(state_hard_updated(a,:) == 0)-(params.maxStateBits-length(CN_neighbors{a})))/(length(CN_neighbors{a}));
         % bin2dec for Q indexing fr updated state
         s_new = 1 + state_hard_updated*pow2vec';
         % Possible Actions in the current state

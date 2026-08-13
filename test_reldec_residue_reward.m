@@ -21,7 +21,7 @@ load('wran_384_256.mat','wran_384_256');
 H = sparse(logical(wran_384_256));
 % load('p_mackey.mat','p_mackey');
 % H = sparse(logical(p_mackey));
-BlockSize = 4 ;
+BlockSize = 1 ;
 pcmatrix = H;
 blocksize_wran = 16;
 load("Q_wran_residue_reward_0.mat","Q")
@@ -38,6 +38,22 @@ load("Q_wran_residue_reward_5.mat","Q")
 Q1{6} = Q;
 load("Q_wran_residue_reward_6.mat","Q")
 Q1{7} = Q;
+
+% load("Q_wran_crt_llr_0.mat","Q")
+% Q1{1} = Q;
+% load("Q_wran_crt_llr_1.mat","Q")
+% Q1{2} = Q;
+% load("Q_wran_crt_llr_2.mat","Q")
+% Q1{3} = Q;
+% load("Q_wran_crt_llr_3.mat","Q")
+% Q1{4} = Q;
+% load("Q_wran_crt_llr_4.mat","Q")
+% Q1{5} = Q;
+% load("Q_wran_crt_llr_5.mat","Q")
+% Q1{6} = Q;
+% load("Q_wran_crt_llr_6.mat","Q")
+% Q1{7} = Q;
+
 % load("Q_mackey_0.5.mat","Q")
 % Q1{1} = Q;
 % load("Q_mackey_1.mat","Q")
@@ -85,9 +101,9 @@ SNR_db = [0 1 2 3 4 5 6];
 SNR = 10.^(SNR_db/10);
 maxnumiter = 5;
 R = cfgLDPCEnc.NumInformationBits / cfgLDPCEnc.BlockLength;
-for i = 1 : length(SNR)
+for i = 4 : length(SNR)
     current_state = zeros(m,params.maxStateBits);
-    parfor j = 1 : 10000
+    parfor j = 1 : 100000
         bits = zeros(cfgLDPCEnc.NumInformationBits,1);
         codeword = ldpcEncode(bits,cfgLDPCEnc);
         tx = 1 - 2*double(codeword);

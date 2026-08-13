@@ -52,7 +52,7 @@ snr = [1	1.25892541179417	1.58489319246111	1.99526231496888	2.51188643150958 	3.
 % sigma = 1;
 R = cfgLDPCEnc.NumInformationBits / cfgLDPCEnc.BlockLength;
 % R = 1/2 % for mackey
-sigma = sqrt(1/(2*R*snr(1)));
+sigma = sqrt(1/(2*R*snr(7)));
 for i = 1:numSamples
     rx = 1 +  sigma*randn(1,n);
     L_set{i} = 2*rx/(sigma^2);
@@ -62,7 +62,7 @@ end
 Q = RELDEC_CPU_MAIN(L_set, H, CN_neighbors, VN_neighbors, clusters, params);
 
 
-save("Q_wran_crt_llr_0.mat","Q")
+save("Q_wran_crt_llr_6.mat","Q")
 disp('Training completed');
 
 

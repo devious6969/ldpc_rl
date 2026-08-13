@@ -83,7 +83,6 @@ maxnumiter = 5;
 R = cfgLDPCEnc.NumInformationBits / cfgLDPCEnc.BlockLength;
 for i = 1 : length(SNR)
     current_state = zeros(m,params.maxStateBits);
-    i
     parfor j = 1 : 10000
         bits = zeros(cfgLDPCEnc.NumInformationBits,1);
         codeword = ldpcEncode(bits,cfgLDPCEnc);
