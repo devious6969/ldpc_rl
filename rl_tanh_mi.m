@@ -3,14 +3,14 @@ clear; clc;
 
 %% ---------------- PARITY CHECK MATRIX ----------------
 % load("P_520.mat","P_520")
-% load('wran_384_256.mat','wran_384_256');
-load('p_mackey.mat','p_mackey');
+load('wran_384_256.mat','wran_384_256');
+% load('p_mackey.mat','p_mackey');
 % P = P_520;
 % blocksize = 10;
 % blocksize = 16;
-% H = sparse(logical(wran_384_256));
+H = sparse(logical(wran_384_256));
 % H = ldpcQuasiCyclicMatrix(blocksize,P);
-H = sparse(logical(p_mackey));
+% H = sparse(logical(p_mackey));
 blocksize = 1 ;
 [m, ~] = size(H);
 
@@ -20,10 +20,10 @@ params.beta = 0.9;
 params.epsilon = 0.1;
 params.lmax = 50;
 
-params.maxlevels = 32;   % Quantization Level 32 -> 5 bits
+params.maxlevels = 22;   % Quantization Level 32 -> 5 bits
 
 
-numSamples = 30000;
+numSamples = 90000;
 n = length(H);
 %% ---------------- PRECOMPUTE GRAPH ----------------
 CN_neighbors = cell(m,1);
@@ -44,9 +44,9 @@ clusters = num2cell(1:m);
 L_set = cell(numSamples,1);
 
 
-% snr = [1	1.25892541179417	1.58489319246111	1.99526231496888	2.51188643150958];
+snr = [1	1.25892541179417	1.58489319246111	1.99526231496888	2.51188643150958];
 % snr = [0.501187233627272	0.630957344480193	0.794328234724282	1	1.25892541179417];
-snr = [1.122018454301963	1.258925411794167	1.412537544622754	1.584893192461114	1.778279410038923	1.995262314968880];
+% snr = [1.122018454301963	1.258925411794167	1.412537544622754	1.584893192461114	1.778279410038923	1.995262314968880];
 sigma = 1;
 
 for i = 1:numSamples
@@ -58,7 +58,7 @@ end
 Q = RELDEC_CPU_MAIN(L_set, H, CN_neighbors, VN_neighbors, clusters, params);
 
 
-save("Q_mackey_0.5_tanh_mi.mat","Q")
+save("Q_wran_0_tanh_mi.mat","Q")
 disp('Training completed');
 
 
@@ -95,7 +95,7 @@ for idx = 1:N
         current_state(i) = mean(tanh((vals))); 
 
         % Initilization of states for Episode
-        s(i) = min(max(floor((current_state(i) + 1)/2 * 32) + 1, 1), 32);
+        s(i) = min(max(floor((current_state(i) + 1)/2 * maxStates) + 1, 1), maxStates);
 
     end
     
@@ -147,7 +147,7 @@ for idx = 1:N
             current_state_updated(i) = mean(tanh((vals)));
 
             % Initilization of states for Episode
-            s_new(i) = min(max(floor((current_state_updated(i) + 1)/2 * 32) + 1, 1), 32);
+            s_new(i) = min(max(floor((current_state_updated(i) + 1)/2 * maxStates) + 1, 1), maxStates);
             
         end
 
