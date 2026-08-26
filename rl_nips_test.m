@@ -59,7 +59,7 @@ for i = 1:numSamples
     L_set{i} = 2*rx/(sigma^2);
 end
 
-L_set2 = L_set(1:1000);
+L_set2 = L_set(1:10000);
 
 %% ---------------- TRAINING FOR QUANTIZATION ----------------
 for i = 1 : 1000
