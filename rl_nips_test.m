@@ -77,12 +77,12 @@ for i = 1 : 1000
     end
 
     for j = 1 : length(cn_s)
-        idx2 = CN_neighbors{j};          
-        vals2 = L(idx2)- res{j};
+        idx2 = CN_neighbors{cn_s(j)};          
+        vals2 = L(idx2)- res{cn_s(j)};
         temp = tanh(vals2./2);
         prodLq = prod(temp);  
         res{j} = 2*atanh(prodLq ./ temp);
-        L(idx2) = vals2 + res{j};
+        L(idx2) = vals2 + res{cn_s(j)};
         vals3 = L(idx2);
         s_soft(i,l+j) =  sum(vals);
     end
