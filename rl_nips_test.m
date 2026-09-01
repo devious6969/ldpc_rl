@@ -52,14 +52,14 @@ snr = [1	1.25892541179417	1.58489319246111	1.99526231496888	2.51188643150958 	3.
 % sigma = 1;
 R = cfgLDPCEnc.NumInformationBits / cfgLDPCEnc.BlockLength;
 % R = 1/2 % for mackey
-sigma = sqrt(1/(2*R*snr(3)));
+sigma = sqrt(1/(2*R*snr(6)));
 
 for i = 1:numSamples
     rx = 1 +  sigma*randn(1,n);
     L_set{i} = 2*rx/(sigma^2);
 end
 
-L_set2 = L_set(1:10000);
+L_set2 = L_set(1:1000);
 
 %% ---------------- TRAINING FOR QUANTIZATION ----------------
 for i = 1 : 1000
@@ -81,7 +81,7 @@ for i = 1 : 1000
         vals2 = L(idx2)- res{cn_s(j)};
         temp = tanh(vals2./2);
         prodLq = prod(temp);  
-        res{j} = 2*atanh(prodLq ./ temp);
+        res{cn_s(j)} = 2*atanh(prodLq ./ temp);
         L(idx2) = vals2 + res{cn_s(j)};
         vals3 = L(idx2);
         s_soft(i,l+j) =  sum(vals);
@@ -97,7 +97,7 @@ M = 4;
 Q = RELDEC_CPU_MAIN(L_set, H, CN_neighbors, VN_neighbors, clusters, params,codebook, partition);
 
 
-save("Q_wran_rl_nips_snr_2.mat","Q","codebook","partition");
+save("Q_wran_rl_nips_snr_5.mat","Q","codebook","partition");
 disp('Training completed');
 
 
