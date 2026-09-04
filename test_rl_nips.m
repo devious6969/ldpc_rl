@@ -16,43 +16,68 @@
 % Q = Q(2:end, :);
 % pcmatrix = sparse(logical(readmatrix('WRAN_irreg_384_256 (1).csv')));
 %% 
-load('wran_384_256.mat','wran_384_256');
+% load('wran_384_256.mat','wran_384_256');
 % BlockSize = 16;
-H = sparse(logical(wran_384_256));
-% load('p_mackey.mat','p_mackey');
-% H = sparse(logical(p_mackey));
+% H = sparse(logical(wran_384_256));
+load('p_mackey.mat','p_mackey');
+H = sparse(logical(p_mackey));
 BlockSize = 1 ;
 pcmatrix = H;
 blocksize_wran = 16;
 
-load("Q_wran_rl_nips_snr_0.mat")
+% load("Q_wran_rl_nips_snr_0.mat")
+% Q1{1} = Q;
+% codebook1{1} = codebook;
+% partition1{1} = partition;
+% load("Q_wran_rl_nips_snr_1.mat")
+% Q1{2} = Q;
+% codebook1{2} = codebook;
+% partition1{2} = partition;
+% load("Q_wran_rl_nips_snr_2.mat")
+% Q1{3} = Q;
+% codebook1{3} = codebook;
+% partition1{3} = partition;
+% load("Q_wran_rl_nips_snr_3.mat")
+% Q1{4} = Q;
+% codebook1{4} = codebook;
+% partition1{4} = partition;
+% load("Q_wran_rl_nips_snr_4.mat")
+% Q1{5} = Q;
+% codebook1{5} = codebook;
+% partition1{5} = partition;
+% load("Q_wran_rl_nips_snr_5.mat")
+% Q1{6} = Q;
+% codebook1{6} = codebook;
+% partition1{6} = partition;
+% load("Q_wran_rl_nips_snr_6.mat")
+% Q1{7} = Q;
+% codebook1{7} = codebook;
+% partition1{7} = partition;
+
+load("Q_mackay_rl_nips_snr_0.5.mat")
 Q1{1} = Q;
 codebook1{1} = codebook;
 partition1{1} = partition;
-load("Q_wran_rl_nips_snr_1.mat")
+load("Q_mackay_rl_nips_snr_1.mat")
 Q1{2} = Q;
 codebook1{2} = codebook;
 partition1{2} = partition;
-load("Q_wran_rl_nips_snr_2.mat")
+load("Q_mackay_rl_nips_snr_1.5.mat")
 Q1{3} = Q;
 codebook1{3} = codebook;
 partition1{3} = partition;
-load("Q_wran_rl_nips_snr_3.mat")
+load("Q_mackay_rl_nips_snr_2.mat")
 Q1{4} = Q;
 codebook1{4} = codebook;
 partition1{4} = partition;
-load("Q_wran_rl_nips_snr_4.mat")
+load("Q_mackay_rl_nips_snr_2.5.mat")
 Q1{5} = Q;
 codebook1{5} = codebook;
 partition1{5} = partition;
-load("Q_wran_rl_nips_snr_5.mat")
+load("Q_mackay_rl_nips_snr_3.mat")
 Q1{6} = Q;
 codebook1{6} = codebook;
 partition1{6} = partition;
-load("Q_wran_rl_nips_snr_6.mat")
-Q1{7} = Q;
-codebook1{7} = codebook;
-partition1{7} = partition;
 
 %%
 
@@ -88,7 +113,7 @@ for c = 1:m
     CN_neighbors{c} = find(pcmatrix(c,:));
 end
 params.maxStates = 4;
-cfgLDPCEnc = ldpcEncoderConfig(pcmatrix);
+% cfgLDPCEnc = ldpcEncoderConfig(pcmatrix);
 % cfgLDPCDec_bp = ldpcDecoderConfig(pcmatrix);
 % cfgLDPCDec = ldpcDecoderConfig(pcmatrix,'layered-bp');
 % Parameters for Dec
@@ -96,25 +121,29 @@ cfgLDPCEnc = ldpcEncoderConfig(pcmatrix);
 % blockLen      = cfgLDPCDec.BlockLength;
 % parityLen     = cfgLDPCDec.NumParityCheckBits;
 % nRowsPerLayer = cfgLDPCDec.NumRowsPerLayer;
-SNR_db = [0 1 2 3 4 5 6];
+% SNR_db = [0 1 2 3 4 5 6];
 % SNR_db = [-3 -2 -1 0 1];
-% SNR_db = [0.5 1 1.5 2 2.5 3];
+SNR_db = [0.5 1 1.5 2 2.5 3];
 % SNR
 SNR = 10.^(SNR_db/10);
 maxnumiter = 5;
-R = cfgLDPCEnc.NumInformationBits / cfgLDPCEnc.BlockLength;
-for i = 1 : 7
+% R = cfgLDPCEnc.NumInformationBits / cfgLDPCEnc.BlockLength;
+R = 1/2;
+for i = 6
     current_state = zeros(m,1);
-    parfor j = 1 : 20000
-        bits = zeros(cfgLDPCEnc.NumInformationBits,1);
-        codeword = ldpcEncode(bits,cfgLDPCEnc);
+    parfor j = 1 : 100000
+        % bits = zeros(cfgLDPCEnc.NumInformationBits,1);
+        % codeword = ldpcEncode(bits,cfgLDPCEnc);
+        bits = zeros(48,1);
+        codeword = zeros(96,1);
         tx = 1 - 2*double(codeword);
 
         % Noise standard deviation
         sigma = sqrt(1/(2*R*SNR(i)));
 
         % AWGN
-        noise = sigma * randn(cfgLDPCEnc.BlockLength,1);
+        % noise = sigma * randn(cfgLDPCEnc.BlockLength,1);
+        noise = sigma * randn(96,1);
 
         % Received symbols
         rx = tx + noise;
@@ -131,8 +160,8 @@ for i = 1 : 7
         % data_received = data_modulated + noise;
         % soft_demodulated_output = 2*data_received;
         % [Y,actualnumiter,finalparitychecks] = ldpcDecode(soft_demodulated_output,cfgLDPCDec,maxnumiter);
-        Res = repmat({zeros(cfgLDPCEnc.BlockLength,1)}, 1, height(pcmatrix)/BlockSize);
-        % Res = repmat({zeros(96,1)}, 1, height(pcmatrix)/BlockSize);
+        % Res = repmat({zeros(cfgLDPCEnc.BlockLength,1)}, 1, height(pcmatrix)/BlockSize);
+        Res = repmat({zeros(96,1)}, 1, height(pcmatrix)/BlockSize);
         Y_temp = soft_demodulated_output;
         % for k = 1 : m
         %     res{k} = zeros(1,numel(CN_neighbors{k}));
@@ -188,22 +217,22 @@ for i = 1 : 7
             used(best_cluster) = true;
 
             % ---------- BP UPDATE ----------
-            [Y_out, res1] = ldpc_cluster(...
-                Y_temp, CN_neighbors, best_cluster, ...
-                Res{best_cluster}, BlockSize);
-
-            Y_temp = Y_out;
-            Res{best_cluster} = res1;
-            % ---------- BP UPDATE ----------  for check node only
-            % Y_out = Y_temp;
-            % idx2 = CN_neighbors{best_cluster};
-            % vals2 = Y_temp(idx2) - Res{best_cluster}(idx2);
-            % temp = tanh(vals2/2);
-            % prodLq = prod(temp);
-            % Res_new = 2*atanh(prodLq ./ temp);
-            % Y_out(idx2) = vals2 + Res_new;
-            % Res{best_cluster}(idx2) = Res_new;
+            % [Y_out, res1] = ldpc_cluster(...
+            %     Y_temp, CN_neighbors, best_cluster, ...
+            %     Res{best_cluster}, BlockSize);
+            % 
             % Y_temp = Y_out;
+            % Res{best_cluster} = res1;
+            % ---------- BP UPDATE ----------  for check node only
+            Y_out = Y_temp;
+            idx2 = CN_neighbors{best_cluster};
+            vals2 = Y_temp(idx2) - Res{best_cluster}(idx2);
+            temp = tanh(vals2/2);
+            prodLq = prod(temp);
+            Res_new = 2*atanh(prodLq ./ temp);
+            Y_out(idx2) = vals2 + Res_new;
+            Res{best_cluster}(idx2) = Res_new;
+            Y_temp = Y_out;
 
             % ---------- UPDATE STATE AFTER ACTION ----------
             current_state = zeros(m, 1);
@@ -226,15 +255,15 @@ for i = 1 : 7
             end
         end
         output_final_whole = Y_out < 0;
-        output_final = output_final_whole(1:cfgLDPCEnc.NumInformationBits);
-        % output_final = output_final_whole(1:48);
+        % output_final = output_final_whole(1:cfgLDPCEnc.NumInformationBits);
+        output_final = output_final_whole(1:48);
         ber(j) = biterr(output_final,bits);
         % ber1(j) = biterr(Y,bits);
         j
         i
     end
-    ber_t(i) = mean(ber)/cfgLDPCEnc.NumInformationBits;
-    % ber_t(i) = mean(ber)/48;
+    % ber_t(i) = mean(ber)/cfgLDPCEnc.NumInformationBits;
+    ber_t(i) = mean(ber)/48;
     % ber_t_1(i) = mean(ber1)/cfgLDPCEnc.NumInformationBits;
 end
 % semilogy(SNR_db,ber_t_1)
