@@ -44,13 +44,13 @@ clusters = num2cell(1:m);
 L_set = cell(numSamples,1);
 
 
-snr = [1	1.25892541179417	1.58489319246111	1.99526231496888	2.51188643150958];
+snr = [1.000000000000000 1.258925411794167 1.584893192461114 1.995262314968880 2.511886431509580 3.162277660168380 3.981071705534972];
 % snr = [0.501187233627272	0.630957344480193	0.794328234724282	1	1.25892541179417];
 % snr = [1.122018454301963	1.258925411794167	1.412537544622754	1.584893192461114	1.778279410038923	1.995262314968880];
 sigma = 1;
 
 for i = 1:numSamples
-    rx = 1*sqrt(snr(3)) + sigma * randn(1,n);
+    rx = 1*sqrt(snr(6)) + sigma * randn(1,n);
     L_set{i} = 2*rx/(sigma^2);
 end
 
@@ -58,7 +58,7 @@ end
 Q = RELDEC_CPU_MAIN(L_set, H, CN_neighbors, VN_neighbors, clusters, params);
 
 
-save("Q_wran_3_tanh_mi.mat","Q")
+save("Q_wran_5_tanh_mi.mat","Q")
 disp('Training completed');
 
 

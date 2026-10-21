@@ -8,7 +8,9 @@ for j = 1 : BlockSize
     llr_temp = LLR_int(idx);
     temp = tanh(llr_temp./2);
     prodLq = prod(temp);
-    Res_int(idx) = 2*atanh(prodLq ./ temp);
+    val = prodLq ./ temp;
+    val = max(min(val, 1-1e-12), -1+1e-12);
+    Res_int(idx) = 2*atanh(val);
 end
 LLR_out1 = LLR_int + Res_int;
 end

@@ -1,3 +1,4 @@
+clear; clc;
 % Configuration
 % load("P_520.mat","P_520")
 % % Q = Q ./ max(abs(Q(:)));
@@ -43,6 +44,10 @@ load("Q_wran_2_tanh_mi.mat","Q")
 Q1{3} = Q;
 load("Q_wran_3_tanh_mi.mat","Q")
 Q1{4} = Q;
+load("Q_wran_4_tanh_mi.mat","Q")
+Q1{5} = Q;
+load("Q_wran_5_tanh_mi.mat","Q")
+Q1{6} = Q;
 
 % load("Q_P_520_snr_neg3.mat","Q")
 % Q1{1} = Q;
@@ -77,7 +82,7 @@ SNR_db = [0 1 2 3 4 5 6];
 SNR = 10.^(SNR_db/10);
 maxnumiter = 5;
 R = cfgLDPCEnc.NumInformationBits / cfgLDPCEnc.BlockLength;
-for i = 3 : 4
+for i = 4 : 6
     current_state = zeros(m,params.maxStateBits);
     i
     parfor j = 1 : 100000
@@ -215,3 +220,5 @@ end
 % semilogy(SNR_db,ber_t_1)
 % semilogy(SNR,ber_t)
 % grid on
+
+save("results_tanh_mi.mat","ber_t")
